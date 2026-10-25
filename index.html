@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For My Beautiful Girl</title>
+<style>
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #0A0610;
+  color: #EDE6FA;
+  padding-bottom: 90px;
+}
+.wrap { max-width: 480px; margin: 0 auto; padding: 0 16px; }
+header {
+  background: linear-gradient(170deg, #1B0E33 0%, #0A0610 100%);
+  padding: 30px 16px 40px;
+  border-bottom: 1px solid #2A1650;
+}
+header h1 { margin: 0; font-size: 28px; color: #C3A6FF; letter-spacing: 0.5px; }
+header p { margin: 6px 0 0; color: #A596C2; }
+main { margin-top: 18px; }
+.card {
+  background: #161026;
+  border: 1px solid #2A1D45;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.card h2 { margin: 0 0 12px; font-size: 18px; color: #C3A6FF; }
+.muted { color: #A596C2; font-size: 14px; line-height: 1.5; }
+label { display: block; font-size: 14px; font-weight: 600; margin: 12px 0 6px; color: #D9CBF5; }
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-family: inherit;
+  border: 2px solid #2F2150;
+  border-radius: 12px;
+  background: #0E0818;
+  color: #EDE6FA;
+}
+textarea { min-height: 110px; resize: vertical; }
+input:focus, textarea:focus { outline: none; border-color: #8B5CF6; }
+button { font-family: inherit; cursor: pointer; }
+.btn {
+  width: 100%;
+  margin-top: 14px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  background: #7C4DFF;
+  border: none;
+  border-radius: 12px;
+}
+.btn:hover { background: #6A3DE8; }
+.btn.soft { background: #2A1D45; color: #D9CBF5; }
+.error { color: #FF8A9B; font-size: 14px; margin-top: 8px; min-height: 18px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  padding: 9px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #221838;
+  color: #CDBBF0;
+  border: 2px solid #2F2150;
+  border-radius: 22px;
+}
+.chip.on { background: #7C4DFF; color: white; border-color: #7C4DFF; }
+.tip {
+  background: #1D1433;
+  border-left: 4px solid #8B5CF6;
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 14px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+#timerBox {
+  display: none;
+  text-align: center;
+  background: #24134A;
+  border: 1px solid #4B2E94;
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 14px;
+}
+#timerBox .time { font-size: 46px; font-weight: 800; color: #C3A6FF; }
+.steps { margin: 0; padding-left: 20px; line-height: 1.7; font-size: 15px; color: #D9CBF5; }
+.emergency {
+  background: #2A0B14;
+  border: 2px solid #E5485D;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+.emergency h2 { margin: 0 0 8px; color: #FF8A9B; font-size: 18px; }
+.emergency ul { margin: 0; padding-left: 20px; }
+nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #0F0919;
+  border-top: 1px solid #2A1650;
+  display: flex;
+  justify-content: center;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+nav button {
+  flex: 1;
+  max-width: 120px;
+  padding: 14px 4px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #7D6C9A;
+  border-top: 3px solid transparent;
+}
+nav button.active { color: #C3A6FF; border-top-color: #8B5CF6; }
+.tab { display: none; }
+.tab.show { display: block; }
+#capyStage, #springStage {
+  position: relative;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 16px;
+  background: radial-gradient(circle at 50% 60%, #2A1650 0%, #120B22 70%);
+  user-select: none;
+}
+#ring {
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  border: 3px solid #5B3AB8;
+  background: rgba(124, 77, 255, 0.12);
+  transition: transform 4s ease-in-out;
+}
+#capy { width: 300px; max-width: 100%; position: relative; cursor: pointer; }
+#capy .eyeShut, #capy .blush, #capy .orange { display: none; }
+#capy.happy .eyeOpen { display: none; }
+#capy.happy .eyeShut, #capy.happy .blush { display: inline; }
+#capy.hasOrange .orange { display: inline; }
+#capy.happy #capyBody { animation: wiggle 0.5s ease-in-out 2; transform-origin: 50% 100%; transform-box: fill-box; }
+@keyframes wiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-2.5deg); }
+  75% { transform: rotate(2.5deg); }
+  100% { transform: rotate(0deg); }
+}
+.heart {
+  position: absolute;
+  font-size: 24px;
+  color: #C3A6FF;
+  pointer-events: none;
+  animation: floatUp 1.4s ease-out forwards;
+}
+@keyframes floatUp {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-80px); }
+}
+#breathText {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #C3A6FF;
+  min-height: 30px;
+  margin-top: 14px;
+}
+#spring { width: 100%; max-width: 340px; }
+.floater { animation: bob 3s ease-in-out infinite alternate; cursor: pointer; }
+@keyframes bob {
+  from { transform: translateY(0); }
+  to { transform: translateY(5px); }
+}
+.steam { animation: rise 4s ease-out infinite; opacity: 0; }
+@keyframes rise {
+  0% { opacity: 0; transform: translateY(0); }
+  30% { opacity: 0.5; }
+  100% { opacity: 0; transform: translateY(-45px); }
+}
+#bubbleStage {
+  position: relative;
+  height: 260px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #120B22, #24134A);
+}
+.bubble {
+  position: absolute;
+  bottom: -70px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.7), rgba(155, 123, 255, 0.35) 60%, rgba(124, 77, 255, 0.25));
+  border: 2px solid rgba(195, 166, 255, 0.6);
+  animation: floatBubble 7s linear forwards;
+  transition: transform 0.25s, opacity 0.25s;
+  cursor: pointer;
+}
+.bubble.pop {
+  transform: scale(1.6);
+  opacity: 0;
+  animation-play-state: paused;
+}
+@keyframes floatBubble {
+  from { bottom: -70px; }
+  to { bottom: 270px; }
+}
+.calmTime { font-size: 46px; font-weight: 800; color: #C3A6FF; text-align: center; }
+.btnRow { display: flex; gap: 10px; }
+.btnRow .btn { margin-top: 12px; }
+button { touch-action: manipulation; }
+.bubble { display: flex; align-items: center; justify-content: center; }
+.bubble svg { width: 72%; height: 72%; pointer-events: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>For My Beautiful Girl</h1>
+    <p>I love you, calm down for me.</p>
+  </div>
+</header>
+
+<div class="wrap">
+<main>
+
+<section id="home" class="tab show">
+  <div class="card">
+    <h2>How do I feel right now?</h2>
+    <div class="muted">Tap everything you feel.</div>
+    <label>Low sugar signs</label>
+    <div class="chips" id="lowChips"></div>
+    <label>High sugar signs</label>
+    <div class="chips" id="highChips"></div>
+    <div class="tip" id="symptomResult">Tap your symptoms to see what they might mean.</div>
+  </div>
+
+  <div class="card">
+    <h2>Treating a low?</h2>
+    <div class="muted">After you take 15 g of fast sugar, start the timer and recheck when it ends.</div>
+    <button class="btn" id="startBtn" onclick="startTimer()">Start 15 minute timer</button>
+    <div id="timerBox">
+      <div class="muted">Recheck your sugar in</div>
+      <div class="time" id="timeLeft">15:00</div>
+      <button class="btn soft" onclick="stopTimer()">Stop timer</button>
+    </div>
+  </div>
+</section>
+
+<section id="calm" class="tab">
+  <div class="card" id="calmTimerCard" style="display:none">
+    <h2>Waiting to recheck</h2>
+    <div class="calmTime" id="calmTimeLeft">15:00</div>
+    <div class="muted" style="text-align:center">Play with Celli while you wait. I'm right here with you.</div>
+  </div>
+
+  <div class="card">
+    <h2>Chill with Celli</h2>
+    <div id="capyStage">
+      <div id="ring"></div>
+      <svg id="capy" viewBox="0 0 300 200" role="img" aria-label="A calm capybara. Tap to pet it." onclick="petCelli(event)">
+        <ellipse cx="150" cy="180" rx="100" ry="9" fill="#000" opacity="0.35"></ellipse>
+        <g id="capyBody">
+          <rect x="82" y="132" width="20" height="46" rx="9" fill="#7A4F30"></rect>
+          <rect x="116" y="136" width="20" height="42" rx="9" fill="#7A4F30"></rect>
+          <rect x="184" y="136" width="20" height="42" rx="9" fill="#7A4F30"></rect>
+          <rect x="214" y="132" width="20" height="46" rx="9" fill="#7A4F30"></rect>
+          <ellipse cx="150" cy="115" rx="98" ry="54" fill="#A9744B"></ellipse>
+          <ellipse cx="150" cy="130" rx="70" ry="30" fill="#B98558" opacity="0.7"></ellipse>
+          <ellipse cx="232" cy="98" rx="46" ry="40" fill="#A9744B"></ellipse>
+          <rect x="248" y="90" width="46" height="46" rx="20" fill="#9A6740"></rect>
+          <ellipse cx="286" cy="100" rx="7" ry="6" fill="#2B1A12"></ellipse>
+          <ellipse cx="205" cy="68" rx="10" ry="13" fill="#7A4F30"></ellipse>
+          <g class="eyeOpen">
+            <circle cx="246" cy="86" r="6" fill="#1A0F0A"></circle>
+            <circle cx="248" cy="84" r="2" fill="#fff"></circle>
+          </g>
+          <path class="eyeShut" d="M239 88 Q246 95 253 88" stroke="#1A0F0A" stroke-width="3" fill="none" stroke-linecap="round"></path>
+          <ellipse class="blush" cx="238" cy="106" rx="9" ry="6" fill="#E88A8A" opacity="0.6"></ellipse>
+          <path d="M262 124 Q273 131 284 123" stroke="#2B1A12" stroke-width="3" fill="none" stroke-linecap="round"></path>
+          <g class="orange">
+            <circle cx="222" cy="54" r="15" fill="#FF9F1C"></circle>
+            <path d="M222 40 Q230 34 235 40 Q228 44 222 40" fill="#4CAF50"></path>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div id="breathText">Tap Celli to pet him</div>
+    <div class="muted" id="petCount" style="text-align:center;margin-top:4px"></div>
+    <div class="btnRow">
+      <button class="btn soft" onclick="toggleOrange()">Orange hat</button>
+      <button class="btn" id="breathBtn" onclick="toggleBreathing()">Breathe with Celli</button>
+    </div>
+    <div class="tip">Feeling shaky, dizzy or confused? Treat your sugar first, then come back here.</div>
+  </div>
+
+  <div class="card">
+    <h2>Celli's hot spring</h2>
+    <div id="springStage">
+      <svg id="spring" viewBox="0 0 300 200" role="img" aria-label="A capybara relaxing in a hot spring with floating oranges">
+        <ellipse cx="108" cy="62" rx="12" ry="14" fill="#7A4F30"></ellipse>
+        <ellipse cx="192" cy="62" rx="12" ry="14" fill="#7A4F30"></ellipse>
+        <ellipse cx="150" cy="96" rx="56" ry="46" fill="#A9744B"></ellipse>
+        <rect x="115" y="96" width="70" height="40" rx="20" fill="#9A6740"></rect>
+        <ellipse cx="138" cy="106" rx="4" ry="3" fill="#2B1A12"></ellipse>
+        <ellipse cx="162" cy="106" rx="4" ry="3" fill="#2B1A12"></ellipse>
+        <path d="M122 84 Q130 91 138 84" stroke="#1A0F0A" stroke-width="3" fill="none" stroke-linecap="round"></path>
+        <path d="M162 84 Q170 91 178 84" stroke="#1A0F0A" stroke-width="3" fill="none" stroke-linecap="round"></path>
+        <ellipse cx="114" cy="98" rx="8" ry="5" fill="#E88A8A" opacity="0.5"></ellipse>
+        <ellipse cx="186" cy="98" rx="8" ry="5" fill="#E88A8A" opacity="0.5"></ellipse>
+        <circle id="headOrange0" cx="150" cy="46" r="12" fill="#FF9F1C" style="display:none"></circle>
+        <circle id="headOrange1" cx="130" cy="52" r="12" fill="#FF9F1C" style="display:none"></circle>
+        <circle id="headOrange2" cx="170" cy="52" r="12" fill="#FF9F1C" style="display:none"></circle>
+        <circle id="headOrange3" cx="140" cy="32" r="12" fill="#FF9F1C" style="display:none"></circle>
+        <circle id="headOrange4" cx="160" cy="32" r="12" fill="#FF9F1C" style="display:none"></circle>
+        <rect x="0" y="122" width="300" height="78" fill="#4B2FA8" opacity="0.88"></rect>
+        <path d="M0 122 Q25 116 50 122 T100 122 T150 122 T200 122 T250 122 T300 122" fill="none" stroke="#9B7BFF" stroke-width="3" opacity="0.7"></path>
+        <circle class="steam" cx="40" cy="110" r="9" fill="#fff" style="animation-delay:0s"></circle>
+        <circle class="steam" cx="85" cy="105" r="7" fill="#fff" style="animation-delay:1.3s"></circle>
+        <circle class="steam" cx="215" cy="105" r="7" fill="#fff" style="animation-delay:2.2s"></circle>
+        <circle class="steam" cx="262" cy="110" r="9" fill="#fff" style="animation-delay:0.7s"></circle>
+        <g class="floater" id="floater0" onclick="catchOrange(0)" style="animation-delay:0s"><circle cx="38" cy="136" r="22" fill="transparent"></circle><circle cx="38" cy="136" r="12" fill="#FF9F1C"></circle></g>
+        <g class="floater" id="floater1" onclick="catchOrange(1)" style="animation-delay:0.6s"><circle cx="80" cy="152" r="22" fill="transparent"></circle><circle cx="80" cy="152" r="12" fill="#FF9F1C"></circle></g>
+        <g class="floater" id="floater2" onclick="catchOrange(2)" style="animation-delay:1.1s"><circle cx="150" cy="168" r="22" fill="transparent"></circle><circle cx="150" cy="168" r="12" fill="#FF9F1C"></circle></g>
+        <g class="floater" id="floater3" onclick="catchOrange(3)" style="animation-delay:0.3s"><circle cx="222" cy="150" r="22" fill="transparent"></circle><circle cx="222" cy="150" r="12" fill="#FF9F1C"></circle></g>
+        <g class="floater" id="floater4" onclick="catchOrange(4)" style="animation-delay:0.9s"><circle cx="264" cy="136" r="22" fill="transparent"></circle><circle cx="264" cy="136" r="12" fill="#FF9F1C"></circle></g>
+      </svg>
+    </div>
+    <div id="springText" class="muted" style="text-align:center;margin-top:12px;font-size:16px">Tap the oranges to give them to Celli.</div>
+    <button class="btn soft" onclick="resetSpring()">Start over</button>
+  </div>
+
+  <div class="card">
+    <h2>Celli Run</h2>
+    <div class="muted" style="margin-bottom:12px">Help Celli jump over the logs and rocks, and grab the oranges. Tap the game, press the space bar, or use the button.</div>
+    <canvas id="runCanvas" width="640" height="240" style="width:100%;border-radius:16px;display:block" onpointerdown="jumpRun()"></canvas>
+    <button class="btn" onclick="jumpRun()">Jump</button>
+  </div>
+
+  <div class="card">
+    <h2>Free the baby capybaras</h2>
+    <div class="muted" style="margin-bottom:12px">Each bubble has a little capybara inside. Tap one to set it free, and breathe slowly between taps.</div>
+    <div id="bubbleStage"></div>
+    <div class="muted" id="bubbleCount" style="text-align:center;margin-top:10px;font-size:16px">Capybaras freed: 0</div>
+  </div>
+</section>
+
+<section id="guide" class="tab">
+  <div class="card">
+    <h2>If I am LOW</h2>
+    <ol class="steps">
+      <li>Sit down and check my sugar. If I cannot check, treat it as low.</li>
+      <li>Take 15 g of fast sugar: half a cup of juice or regular soda, 3 to 4 glucose tablets, or 1 tablespoon of sugar or honey.</li>
+      <li>Wait 15 minutes and check again. Still low? Take another 15 g.</li>
+      <li>Once I am back up, eat a snack like crackers with peanut butter.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>If I am HIGH</h2>
+    <ol class="steps">
+      <li>Check my sugar so I know the number.</li>
+      <li>Drink plain water.</li>
+      <li>Take my medication only the way my doctor told me.</li>
+      <li>Rest and check again in 1 to 2 hours.</li>
+    </ol>
+  </div>
+
+  <div class="emergency">
+    <h2>Get help right away if</h2>
+    <ul>
+      <li>I am very confused, very sleepy, or cannot swallow</li>
+      <li>I pass out or have a seizure</li>
+      <li>I am still low after 2 to 3 rounds of treatment</li>
+      <li>I am vomiting, have stomach pain, or my breathing is fast</li>
+    </ul>
+    <p style="margin:10px 0 0;font-weight:700">Go to the nearest hospital, or ask someone near me to get help right now. Never put food or drink in the mouth of someone who is unconscious.</p>
+  </div>
+</section>
+
+</main>
+</div>
+
+<nav>
+  <button class="active" data-tab="home" onclick="showTab('home')">Home</button>
+  <button data-tab="calm" onclick="showTab('calm')">Calm</button>
+  <button data-tab="guide" onclick="showTab('guide')">Guide</button>
+</nav>
+
+<script>
+var KEY = "glucoseBuddyDark";
+var data = { pets: 0, timerEnd: 0, best: 0 };
+
+var lowSymptoms = ["Dizzy (hilo)", "Feeling cold", "Shaking hands", "Weak", "Headache", "Brain fog"];
+var highSymptoms = ["Feels like floating", "Vision very bright", "Moody / irritable", "Head feels light", "Itchy feet"];
+var kindWords = [
+  "You're doing great.",
+  "One thing at a time.",
+  "Slow breaths. You're okay.",
+  "Celli is proud of you.",
+  "Take a sip of water.",
+  "Nothing to rush. Just chill."
+];
+
+var picked = {};
+var timerInterval = null;
+var breathing = false;
+var breathTimeout = null;
+var orangesGiven = 0;
+var bubbleTimer = null;
+var bubblesPopped = 0;
+var miniCapy = "<svg viewBox='0 0 60 60'><ellipse cx='14' cy='16' rx='6' ry='7' fill='#7A4F30'></ellipse><ellipse cx='46' cy='16' rx='6' ry='7' fill='#7A4F30'></ellipse><ellipse cx='30' cy='32' rx='22' ry='20' fill='#A9744B'></ellipse><rect x='16' y='34' width='28' height='18' rx='9' fill='#9A6740'></rect><circle cx='22' cy='28' r='3' fill='#1A0F0A'></circle><circle cx='38' cy='28' r='3' fill='#1A0F0A'></circle><ellipse cx='25' cy='41' rx='2' ry='1.5' fill='#2B1A12'></ellipse><ellipse cx='35' cy='41' rx='2' ry='1.5' fill='#2B1A12'></ellipse></svg>";
+var game = { state: "ready", h: 0, vy: 0, dist: 0, speed: 4.5, step: 0, nextSpawn: 0, oranges: 0, obstacles: [], fruits: [], raf: null, last: 0 };
+
+function load() {
+  try {
+    var saved = localStorage.getItem(KEY);
+    if (saved) {
+      data = Object.assign(data, JSON.parse(saved));
+    }
+  } catch (e) {}
+}
+
+function save() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(data));
+  } catch (e) {}
+}
+
+function safe(text) {
+  var div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function formatTime(ts) {
+  return new Date(ts).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+}
+
+function showTab(name) {
+  var tabs = document.querySelectorAll(".tab");
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].classList.remove("show");
+  }
+  document.getElementById(name).classList.add("show");
+  var buttons = document.querySelectorAll("nav button");
+  for (var j = 0; j < buttons.length; j++) {
+    buttons[j].classList.toggle("active", buttons[j].getAttribute("data-tab") === name);
+  }
+  if (name !== "calm" && breathing) {
+    toggleBreathing();
+  }
+  if (name === "calm") {
+    startBubbles();
+    drawRun();
+  } else {
+    stopBubbles();
+    stopRun();
+  }
+  window.scrollTo(0, 0);
+}
+
+function renderSymptoms() {
+  var lowHtml = "";
+  var highHtml = "";
+  for (var i = 0; i < lowSymptoms.length; i++) {
+    var onL = picked["low" + i] ? " on" : "";
+    lowHtml += "<button class='chip" + onL + "' onclick=\"toggleSymptom('low'," + i + ")\">" + lowSymptoms[i] + "</button>";
+  }
+  for (var j = 0; j < highSymptoms.length; j++) {
+    var onH = picked["high" + j] ? " on" : "";
+    highHtml += "<button class='chip" + onH + "' onclick=\"toggleSymptom('high'," + j + ")\">" + highSymptoms[j] + "</button>";
+  }
+  document.getElementById("lowChips").innerHTML = lowHtml;
+  document.getElementById("highChips").innerHTML = highHtml;
+
+  var lowCount = 0;
+  var highCount = 0;
+  for (var a = 0; a < lowSymptoms.length; a++) {
+    if (picked["low" + a]) lowCount++;
+  }
+  for (var b = 0; b < highSymptoms.length; b++) {
+    if (picked["high" + b]) highCount++;
+  }
+
+  var result = document.getElementById("symptomResult");
+  if (lowCount === 0 && highCount === 0) {
+    result.innerHTML = "Tap your symptoms to see what they might mean.";
+  } else if (lowCount > highCount) {
+    result.innerHTML = "<b>This looks more like LOW sugar.</b> Check your sugar now. If you cannot check, treat it as low with 15 g of fast sugar and recheck in 15 minutes.";
+  } else if (highCount > lowCount) {
+    result.innerHTML = "<b>This looks more like HIGH sugar.</b> Check your number first, drink water, and recheck in 1 to 2 hours.";
+  } else {
+    result.innerHTML = "<b>Not clear.</b> High and low can feel alike, so check your number before doing anything. If you cannot check and feel shaky or confused, treat it as low.";
+  }
+}
+
+function toggleSymptom(type, index) {
+  var key = type + index;
+  picked[key] = !picked[key];
+  renderSymptoms();
+}
+
+function startTimer() {
+  data.timerEnd = Date.now() + 15 * 60 * 1000;
+  save();
+  runTimer();
+}
+
+function stopTimer() {
+  data.timerEnd = 0;
+  save();
+  runTimer();
+}
+
+function runTimer() {
+  clearInterval(timerInterval);
+  var box = document.getElementById("timerBox");
+  var startBtn = document.getElementById("startBtn");
+  var calmCard = document.getElementById("calmTimerCard");
+  var display = document.getElementById("timeLeft");
+  var calmDisplay = document.getElementById("calmTimeLeft");
+  if (!data.timerEnd) {
+    box.style.display = "none";
+    startBtn.style.display = "block";
+    calmCard.style.display = "none";
+    return;
+  }
+  box.style.display = "block";
+  startBtn.style.display = "none";
+  calmCard.style.display = "block";
+
+  function tick() {
+    var left = data.timerEnd - Date.now();
+    var text = "";
+    var size = "";
+    if (left <= 0) {
+      text = "Time to recheck!";
+      size = "28px";
+      clearInterval(timerInterval);
+    } else {
+      var minutes = Math.floor(left / 60000);
+      var seconds = Math.floor((left % 60000) / 1000);
+      text = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+    }
+    display.textContent = text;
+    calmDisplay.textContent = text;
+    display.style.fontSize = size;
+    calmDisplay.style.fontSize = size;
+  }
+
+  tick();
+  if (data.timerEnd - Date.now() > 0) {
+    timerInterval = setInterval(tick, 1000);
+  }
+}
+
+function showPets() {
+  var label = document.getElementById("petCount");
+  if (data.pets === 0) {
+    label.textContent = "";
+  } else if (data.pets === 1) {
+    label.textContent = "You've petted Celli 1 time";
+  } else {
+    label.textContent = "You've petted Celli " + data.pets + " times";
+  }
+}
+
+function makeHeart(x, y) {
+  var stage = document.getElementById("capyStage");
+  var heart = document.createElement("div");
+  heart.className = "heart";
+  heart.textContent = "♥";
+  heart.style.left = x + "px";
+  heart.style.top = y + "px";
+  stage.appendChild(heart);
+  setTimeout(function () {
+    stage.removeChild(heart);
+  }, 1400);
+}
+
+function petCelli(event) {
+  var stage = document.getElementById("capyStage");
+  var capy = document.getElementById("capy");
+  var rect = stage.getBoundingClientRect();
+  var x = event.clientX - rect.left - 10;
+  var y = event.clientY - rect.top - 20;
+  makeHeart(x, y);
+  data.pets++;
+  save();
+  showPets();
+
+  if (!breathing) {
+    capy.classList.add("happy");
+    document.getElementById("breathText").textContent = kindWords[Math.floor(Math.random() * kindWords.length)];
+    setTimeout(function () {
+      if (!breathing) {
+        capy.classList.remove("happy");
+      }
+    }, 1200);
+  }
+}
+
+function toggleOrange() {
+  document.getElementById("capy").classList.toggle("hasOrange");
+}
+
+function setBreath(text, scale, seconds) {
+  var ring = document.getElementById("ring");
+  document.getElementById("breathText").textContent = text;
+  ring.style.transition = "transform " + seconds + "s ease-in-out";
+  ring.style.transform = "scale(" + scale + ")";
+}
+
+function breatheStep(step) {
+  if (!breathing) return;
+  if (step === 0) {
+    setBreath("Breathe in...", 1.3, 4);
+    breathTimeout = setTimeout(function () { breatheStep(1); }, 4000);
+  } else if (step === 1) {
+    setBreath("Hold...", 1.3, 2);
+    breathTimeout = setTimeout(function () { breatheStep(2); }, 2000);
+  } else {
+    setBreath("Breathe out slowly...", 1, 6);
+    breathTimeout = setTimeout(function () { breatheStep(0); }, 6000);
+  }
+}
+
+function toggleBreathing() {
+  var btn = document.getElementById("breathBtn");
+  var capy = document.getElementById("capy");
+  if (breathing) {
+    breathing = false;
+    clearTimeout(breathTimeout);
+    capy.classList.remove("happy");
+    btn.textContent = "Breathe with Celli";
+    setBreath("Nice job. Tap Celli to pet him", 1, 1);
+  } else {
+    breathing = true;
+    capy.classList.add("happy");
+    btn.textContent = "Stop";
+    breatheStep(0);
+  }
+}
+
+function updateSpringText() {
+  var text = document.getElementById("springText");
+  if (orangesGiven === 0) {
+    text.textContent = "Tap the oranges to give them to Celli.";
+  } else if (orangesGiven < 5) {
+    text.textContent = "Celli has " + orangesGiven + " of 5 oranges. Ahh, so warm.";
+  } else {
+    text.textContent = "Celli is so happy and relaxed. Take a slow breath with him.";
+  }
+}
+
+function catchOrange(index) {
+  var floater = document.getElementById("floater" + index);
+  if (floater.style.display === "none") return;
+  floater.style.display = "none";
+  document.getElementById("headOrange" + orangesGiven).style.display = "inline";
+  orangesGiven++;
+  updateSpringText();
+}
+
+function resetSpring() {
+  orangesGiven = 0;
+  for (var i = 0; i < 5; i++) {
+    document.getElementById("floater" + i).style.display = "inline";
+    document.getElementById("headOrange" + i).style.display = "none";
+  }
+  updateSpringText();
+}
+
+function makeBubble() {
+  var stage = document.getElementById("bubbleStage");
+  if (stage.children.length > 14) return;
+  var size = 58 + Math.floor(Math.random() * 30);
+  var bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.innerHTML = miniCapy;
+  bubble.style.width = size + "px";
+  bubble.style.height = size + "px";
+  bubble.style.left = Math.max(0, Math.floor(Math.random() * (stage.clientWidth - size))) + "px";
+  bubble.onclick = function () {
+    popBubble(bubble);
+  };
+  stage.appendChild(bubble);
+  setTimeout(function () {
+    if (bubble.parentNode) {
+      bubble.parentNode.removeChild(bubble);
+    }
+  }, 7000);
+}
+
+function popBubble(bubble) {
+  if (bubble.classList.contains("pop")) return;
+  bubble.classList.add("pop");
+  bubblesPopped++;
+  document.getElementById("bubbleCount").textContent = "Capybaras freed: " + bubblesPopped;
+  setTimeout(function () {
+    if (bubble.parentNode) {
+      bubble.parentNode.removeChild(bubble);
+    }
+  }, 300);
+}
+
+function startBubbles() {
+  clearInterval(bubbleTimer);
+  makeBubble();
+  bubbleTimer = setInterval(makeBubble, 1000);
+}
+
+function stopBubbles() {
+  clearInterval(bubbleTimer);
+  document.getElementById("bubbleStage").innerHTML = "";
+}
+
+function resetRun() {
+  game.h = 0;
+  game.vy = 0;
+  game.dist = 0;
+  game.speed = 4.5;
+  game.step = 0;
+  game.nextSpawn = 250;
+  game.oranges = 0;
+  game.obstacles = [];
+  game.fruits = [];
+}
+
+function startRun() {
+  resetRun();
+  game.state = "running";
+  game.last = performance.now();
+  cancelAnimationFrame(game.raf);
+  game.raf = requestAnimationFrame(runLoop);
+}
+
+function stopRun() {
+  cancelAnimationFrame(game.raf);
+  game.state = "ready";
+  resetRun();
+}
+
+function jumpRun() {
+  if (game.state !== "running") {
+    startRun();
+    return;
+  }
+  if (game.h === 0) {
+    game.vy = 11;
+  }
+}
+
+function endRun() {
+  game.state = "over";
+  cancelAnimationFrame(game.raf);
+  var score = runScore();
+  if (score > data.best) {
+    data.best = score;
+    save();
+  }
+  drawRun();
+}
+
+function runScore() {
+  return Math.floor(game.dist / 10) + game.oranges * 10;
+}
+
+function spawnObstacle() {
+  var isLog = Math.random() < 0.5;
+  var obstacle = { x: 660, w: isLog ? 34 : 42, h: isLog ? 32 : 28, kind: isLog ? "log" : "rock" };
+  game.obstacles.push(obstacle);
+  if (Math.random() < 0.6) {
+    game.fruits.push({ x: obstacle.x + obstacle.w / 2, y: 125 });
+  }
+}
+
+function updateRun(dt) {
+  game.dist += game.speed * dt;
+  game.speed = Math.min(8, 4.5 + game.dist / 4000);
+  game.step += dt;
+
+  if (game.h > 0 || game.vy > 0) {
+    game.h += game.vy * dt;
+    game.vy -= 0.6 * dt;
+    if (game.h <= 0) {
+      game.h = 0;
+      game.vy = 0;
+    }
+  }
+
+  game.nextSpawn -= game.speed * dt;
+  if (game.nextSpawn <= 0) {
+    spawnObstacle();
+    game.nextSpawn = 280 + Math.random() * 220;
+  }
+
+  for (var i = 0; i < game.obstacles.length; i++) {
+    game.obstacles[i].x -= game.speed * dt;
+  }
+  for (var j = 0; j < game.fruits.length; j++) {
+    game.fruits[j].x -= game.speed * dt;
+  }
+  game.obstacles = game.obstacles.filter(function (o) { return o.x > -60; });
+
+  var left = 74;
+  var right = 138;
+  var top = 200 - game.h - 50;
+  var bottom = 200 - game.h;
+
+  for (var k = 0; k < game.obstacles.length; k++) {
+    var o = game.obstacles[k];
+    var oLeft = o.x + 4;
+    var oRight = o.x + o.w - 4;
+    var oTop = 200 - o.h;
+    if (left < oRight && right > oLeft && bottom > oTop + 4) {
+      endRun();
+      return;
+    }
+  }
+
+  var kept = [];
+  for (var m = 0; m < game.fruits.length; m++) {
+    var f = game.fruits[m];
+    var hit = f.x > left - 10 && f.x < right + 10 && f.y > top - 10 && f.y < bottom + 10;
+    if (hit) {
+      game.oranges++;
+    } else if (f.x > -20) {
+      kept.push(f);
+    }
+  }
+  game.fruits = kept;
+}
+
+function runLoop(now) {
+  if (game.state !== "running") return;
+  var dt = Math.min(3, (now - game.last) / 16.67);
+  game.last = now;
+  updateRun(dt);
+  if (game.state !== "running") return;
+  drawRun();
+  game.raf = requestAnimationFrame(runLoop);
+}
+
+function drawCelli(g, x, h) {
+  var base = 200 - h;
+  var swing = h > 0 ? 0 : Math.sin(game.step * 0.35) * 6;
+  g.fillStyle = "#7A4F30";
+  g.fillRect(x + 8 + swing, base - 16, 9, 16);
+  g.fillRect(x + 22 - swing, base - 16, 9, 16);
+  g.fillRect(x + 48 + swing, base - 16, 9, 16);
+  g.fillRect(x + 60 - swing, base - 16, 9, 16);
+  g.fillStyle = "#A9744B";
+  g.beginPath();
+  g.ellipse(x + 35, base - 30, 36, 20, 0, 0, Math.PI * 2);
+  g.fill();
+  g.beginPath();
+  g.ellipse(x + 68, base - 38, 18, 15, 0, 0, Math.PI * 2);
+  g.fill();
+  g.fillStyle = "#9A6740";
+  g.beginPath();
+  g.ellipse(x + 80, base - 33, 11, 10, 0, 0, Math.PI * 2);
+  g.fill();
+  g.fillStyle = "#7A4F30";
+  g.beginPath();
+  g.ellipse(x + 58, base - 52, 5, 6, 0, 0, Math.PI * 2);
+  g.fill();
+  g.fillStyle = "#2B1A12";
+  g.beginPath();
+  g.ellipse(x + 88, base - 37, 3, 2.5, 0, 0, Math.PI * 2);
+  g.fill();
+  g.beginPath();
+  g.arc(x + 70, base - 44, 2.5, 0, Math.PI * 2);
+  g.fill();
+}
+
+function drawRun() {
+  var canvas = document.getElementById("runCanvas");
+  var g = canvas.getContext("2d");
+  var sky = g.createLinearGradient(0, 0, 0, 240);
+  sky.addColorStop(0, "#120B22");
+  sky.addColorStop(1, "#2A1650");
+  g.fillStyle = sky;
+  g.fillRect(0, 0, 640, 240);
+
+  g.fillStyle = "#E9DDFF";
+  g.beginPath();
+  g.arc(560, 48, 18, 0, Math.PI * 2);
+  g.fill();
+
+  g.fillStyle = "#3A2370";
+  g.fillRect(0, 200, 640, 40);
+  g.fillStyle = "#5B3AB8";
+  for (var i = 0; i < 9; i++) {
+    g.fillRect(i * 80 - (game.dist % 80), 216, 30, 4);
+  }
+
+  for (var a = 0; a < game.obstacles.length; a++) {
+    var o = game.obstacles[a];
+    if (o.kind === "log") {
+      g.fillStyle = "#6B4423";
+      g.fillRect(o.x, 200 - o.h, o.w, o.h);
+      g.fillStyle = "#8A5A33";
+      g.fillRect(o.x, 200 - o.h, o.w, 6);
+    } else {
+      g.fillStyle = "#6E6785";
+      g.beginPath();
+      g.ellipse(o.x + o.w / 2, 200, o.w / 2, o.h, 0, Math.PI, Math.PI * 2);
+      g.fill();
+    }
+  }
+
+  for (var b = 0; b < game.fruits.length; b++) {
+    var f = game.fruits[b];
+    g.fillStyle = "#FF9F1C";
+    g.beginPath();
+    g.arc(f.x, f.y, 10, 0, Math.PI * 2);
+    g.fill();
+    g.fillStyle = "#4CAF50";
+    g.fillRect(f.x - 1, f.y - 14, 4, 6);
+  }
+
+  drawCelli(g, 60, game.h);
+
+  g.fillStyle = "#EDE6FA";
+  g.font = "bold 20px sans-serif";
+  g.textAlign = "left";
+  g.fillText("Score " + runScore() + "   Oranges " + game.oranges, 16, 30);
+  g.textAlign = "right";
+  g.fillText("Best " + data.best, 624, 30);
+
+  if (game.state !== "running") {
+    g.fillStyle = "rgba(10, 6, 16, 0.65)";
+    g.fillRect(120, 80, 400, 80);
+    g.fillStyle = "#C3A6FF";
+    g.textAlign = "center";
+    g.font = "bold 24px sans-serif";
+    if (game.state === "over") {
+      g.fillText("Celli tripped! Score " + runScore(), 320, 112);
+      g.font = "18px sans-serif";
+      g.fillStyle = "#EDE6FA";
+      g.fillText("Tap to try again", 320, 140);
+    } else {
+      g.fillText("Tap to help Celli run", 320, 112);
+      g.font = "18px sans-serif";
+      g.fillStyle = "#EDE6FA";
+      g.fillText("Jump over the logs and rocks", 320, 140);
+    }
+  }
+}
+
+document.addEventListener("keydown", function (event) {
+  var calmOpen = document.getElementById("calm").classList.contains("show");
+  if (calmOpen && (event.code === "Space" || event.code === "ArrowUp")) {
+    event.preventDefault();
+    jumpRun();
+  }
+});
+
+load();
+renderSymptoms();
+showPets();
+runTimer();
+</script>
+</body>
+</html>
